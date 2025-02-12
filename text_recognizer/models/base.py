@@ -60,7 +60,7 @@ class Model:
         )
 
         self.network.fit_generator(
-            genetator = train_sequence,
+            generator = train_sequence,
             epochs = epochs,
             callbacks = callbacks,
             validation_data = test_sequence,
@@ -75,13 +75,13 @@ class Model:
         return np.mean(np.argmax(preds, -1) == np.argmax(y, -1))
     
     def loss(self): #pylint: disable= no-self-use
-        return 'categorical_cross_entropy'
+        return 'categorical_crossentropy'
     
     def optimizer(self): #pylint: disable= no-self-use
-        return RMSprop
+        return RMSprop()
     
     def metrics(self): #pylint: disable= no-self-use
-        return ['acuracy']
+        return ['accuracy']
     
     def load_weights(self):
         self.network.load_weights(self.weights_filename)

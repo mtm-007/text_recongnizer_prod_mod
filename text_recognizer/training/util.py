@@ -10,7 +10,7 @@ from text_recognizer.models.base import Model
 from text_recognizer.training.gpu_util_sampler import GPUUtilizationSampler
 
 
-EarlyStopping = True
+Early_Stopping = True
 GPU_UTIL_SAMPLER = True
 
 def train_model(
@@ -23,7 +23,7 @@ def train_model(
     """Train Model."""
     callbacks = []
 
-    if EarlyStopping:
+    if Early_Stopping:
         early_stopping = EarlyStopping(monitor='val_loss', min_delta=0.01, patience=3, verbose=1, mode='auto')
         callbacks.append(early_stopping)
 

@@ -50,28 +50,22 @@ def run_experiment(experiment_config: Dict, save_weights: bool, gpu_ind: int, us
     print('Runing Experiment with config {experiment_config} on GPU {gpu_ind}')
 
     datasets_module = importlib.import_module('text_recognizer.datasets')
-    print("debugging...........start")
-    print(experiment_config['dataset'])
-    print(dir(datasets_module))
-    print("debugging...........finish")
     dataset_class_ = getattr(datasets_module, experiment_config['dataset'])
-    datasets_args = experiment_config.get('datasets_args', {})
-    dataset = dataset_class_(**datasets_args)
+    dataset_args = experiment_config.get('datasets_args', {})
+    dataset = dataset_class_(**dataset_args)
     dataset.load_or_generate_data()
-
-
     print('dataset')
 
-    models_module = importlib.import_module('text_recognizer.model')
-    model_class = getattr(models_module, experiment_config['model'])
+    models_module = importlib.import_module('text_recognizer.models')
+    model_class_ = getattr(models_module, experiment_config['model'])
 
-    networks_module = importlib.import_module('text_recongnizer.networks')
+    networks_module = importlib.import_module('text_recognizer.networks')
     network_fn_ = getattr(networks_module, experiment_config['network'])
     network_args = experiment_config.get('network_args', {})
-    model = model_class(
+    model = model_class_(
         dataset_cls = dataset_class_,
         network_fn = network_fn_,
-        datasets_args = datasets_args,
+        dataset_args = dataset_args,
         network_args = network_args
     )
     print(model)
