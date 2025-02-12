@@ -59,8 +59,8 @@ class Model:
             format_fn = self.batch_format_fn
         )
 
-        self.network.fit_generator(
-            generator = train_sequence,
+        self.network.fit(
+            train_sequence,
             epochs = epochs,
             callbacks = callbacks,
             validation_data = test_sequence,
@@ -71,7 +71,7 @@ class Model:
     
     def evaluate(self, x, y, batch_size = 16, verbose= False): #pylint: disable= no-self-use
         sequence = DatasetSequence(x, y, batch_size=batch_size)
-        preds = self.network.predict_generator(sequence)
+        preds = self.network.predict(sequence)
         return np.mean(np.argmax(preds, -1) == np.argmax(y, -1))
     
     def loss(self): #pylint: disable= no-self-use

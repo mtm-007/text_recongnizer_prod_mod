@@ -3,7 +3,7 @@ import numpy as np
 from tensorflow.keras.utils import Sequence
 
 
-def shuffle(x, y):
+def _shuffle(x, y):
     """shuffle x and y maintaining their association."""
     shuffled_indices = np.random.permutation(x.shape[0])
     return x[shuffled_indices], y[shuffled_indices]
