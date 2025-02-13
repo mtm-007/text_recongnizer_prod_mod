@@ -10,7 +10,7 @@ def lenet(input_shape: Tuple[int, ...], output_shape: Tuple[int,...]) -> Model:
     num_classes = output_shape[0]
 
     model = Sequential()
-    if lenet(input_shape) < 3:
+    if len(input_shape) < 3:
         model.add(Lambda(lambda x: tf.expand_dims(x, -1), input_shape=input_shape))
         input_shape = (input_shape[0], input_shape[1], 1)
     model.add(Conv2D(32, kernel_size=(3,3), activation='relu', input_shape=input_shape))
