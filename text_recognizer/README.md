@@ -1,6 +1,7 @@
 ## for Python path mismath:
 bash
 `
+pipenv install --system --dev  
 export PYTHONPATH=$(pwd):$PYTHONPATH
 
 `
