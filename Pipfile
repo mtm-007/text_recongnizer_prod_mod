@@ -7,15 +7,15 @@ name = "pypi"
 boltons = "*"
 editdistance = "*"
 flask = "*"
-h5py = "*"
+h5py = ">=3.8.0"
 ipdb = "*"
-numpy = ">=1.19.2,<2.0.0"
+numpy = ">=1.23,<2.0.0"
 opencv-python-headless = "*"
 requests = "*"
 toml = "*"
 tqdm = "*"
-protobuf = "==3.20.1"
-tensorflow = "*" # ==2.9.0 used here
+protobuf = ">=3.20.3,<4.24"
+tensorflow = "==2.13"# ==2.9.0 used here
 
 [dev-packages]
 bandit = "*"
@@ -32,7 +32,7 @@ pylint = "*"
 pytest = "*"
 pyyaml = "*"
 redlock-py = "*"
-scipy= ">=1.7.0"
+scipy = ">=1.8.0"
 wandb = "*"
 
 [requires]
