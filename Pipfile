@@ -15,7 +15,7 @@ requests = "*"
 toml = "*"
 tqdm = "*"
 protobuf = ">=3.20.3,<4.24"
-tensorflow = "==2.13"# ==2.9.0 used here
+tensorflow = "==2.15"
 
 [dev-packages]
 bandit = "*"
@@ -37,5 +37,4 @@ wandb = "*"
 
 [requires]
 python_version = "3.9.21"
-
 load_dotenv = true
