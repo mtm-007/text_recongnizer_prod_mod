@@ -2,7 +2,7 @@
 from typing import Tuple
 
 import tensorflow as tf
-from tensorflow.keras.layers import Conv2d, Dropout, MaxPoolind2D, Reshape, Lambda
+from tensorflow.keras.layers import Conv2D, Dropout, MaxPooling2D, Reshape, Lambda
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.models import Model as KerasModel
 
@@ -17,9 +17,9 @@ def line_cnn_all_conv(
 
     model = Sequential()
     model.add(Reshape((image_height, image_width, 1), input_shape = input_shape))
-    model.add(Conv2d(32, kernel_size=(3,3), activation='relu'))
-    model.add(Conv2d(64, (3,2), activation='relu'))
-    model.add(MaxPoolind2D(pool_size=(2,2)))
+    model.add(Conv2D(32, kernel_size=(3,3), activation='relu'))
+    model.add(Conv2D(64, (3,2), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2,2)))
     model.add(Dropout(0.2))
 
 
@@ -34,7 +34,7 @@ def line_cnn_all_conv(
     new_width = image_width // 2 - 2
     new_window_width = window_width // 2 - 2 
     new_window_stride = window_stride // 2 - 2
-    model.add(Conv2d(128, (new_heigth, new_window_width), (1, new_window_stride), activatin='relu'))
+    model.add(Conv2D(128, (new_heigth, new_window_width), (1, new_window_stride), activatin='relu'))
     model.add(Dropout(0.2))
     # (1, num_windows, 128)
 
@@ -44,7 +44,7 @@ def line_cnn_all_conv(
   
 
     width = int(num_windows / output_length)
-    model.add(Conv2d(num_classes, (width, 128), (width, 1), activation='softmax'))
+    model.add(Conv2D(num_classes, (width, 128), (width, 1), activation='softmax'))
     # (image_width / width, 1, num_classes)
 
     model.add(Lambda(lambda x: tf.squeeze(x, 2)))
