@@ -1,7 +1,7 @@
 """LSTM with ctc for handwritten text recognition within a line."""
 import tensorflow.keras.backend as K
 from tensorflow.python.client import device_lib
-from tensorflow.keras.layers import Dense, Input, Reshape, TimeDistributed,  Lambda, LSTM, CuDNNLSTM
+from tensorflow.keras.layers import Dense, Input, Reshape, TimeDistributed,  Lambda, LSTM #CuDNNLSTM
 from tensorflow.keras.models import Model as KerasModel
 
 from text_recognizer.networks.lenet import lenet
@@ -23,7 +23,8 @@ def line_lstm_ctc(input_shape, output_shape, window_width=28, window_stride=14):
     label_length = Input(shape=(1,), name='label_length')
 
     gpu_present = len(device_lib.list_local_devices()) > 2
-    lstm_fn = CuDNNLSTM if gpu_present else LSTM
+    #lstm_fn = CuDNNLSTM if gpu_present else LSTM
+    lstm_fn =  LSTM
 
     image_reshaped = Reshape((image_height, image_width, 1))(image_input)
 
@@ -53,8 +54,8 @@ def line_lstm_ctc(input_shape, output_shape, window_width=28, window_stride=14):
     )([y_true, softmax_output, input_length_processed, label_length])
 
     ctc_decoded_output = Lambda(
-        lambda x: ctc_decoded(x[0], x[1], output_length),
-        name = 'ctc_decode'
+        lambda x: ctc_decode(x[0], x[1], output_length),
+        name = 'ctc_decoded'
     )([softmax_output, input_length_processed])
 
     model = KerasModel(
