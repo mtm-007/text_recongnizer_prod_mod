@@ -5,8 +5,10 @@ import json
 import importlib
 from typing import Dict
 import os
+import wandb
 
 from text_recognizer.training.util import train_model
+from text_recognizer.training.gpu_manager import GPUManager
 
 
 DEFAULT_TRAIN_ARGS = {
@@ -74,6 +76,10 @@ def run_experiment(experiment_config: Dict, save_weights: bool, gpu_ind: int, us
     experiment_config['experiment_group']  = experiment_config.get('experiment_group', None)
     experiment_config['gpu_ind'] = gpu_ind
 
+    if use_wandb:
+        wandb.init()
+        wandb.config.update(experiment_config)
+
     train_model(
         model,
         dataset,
@@ -85,6 +91,8 @@ def run_experiment(experiment_config: Dict, save_weights: bool, gpu_ind: int, us
     score = model.evaluate(dataset.x_test, dataset.y_test)
     print(f'Test Evaluation: {score}')
 
+    if use_wandb:
+        wandb.log({'test_metric': score})
 
     if save_weights:
         model.save_weights()
@@ -123,6 +131,10 @@ def _parse_args():
 def main():
     """Run Experiment."""
     args = _parse_args()
+
+    if args.gpu < 0:
+        gpu_manager = GPUManager()
+        args.gpu = gpu_manager.get_free_gpu()
 
     experiment_config = json.loads(args.experiment_config)
     os.environ["CUDA_VISIBLE_DEVICES"]  =f'{args.gpu}'
