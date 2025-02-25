@@ -3,6 +3,7 @@ from typing import Callable, Dict, Tuple
 
 import editdistance
 import numpy as np
+import tensorflow as tf
 import tensorflow.keras.backend as K
 from tensorflow.keras.models import Model as KerasModel
 
@@ -44,7 +45,7 @@ class LineModelCtc(Model):
         test_sequence = DatasetSequence(x, y, batch_size, format_fn=self.batch_format_fn)
 
         decoding_model = KerasModel(inputs= self.network.input, outputs= self.network.get_layer('ctc_decoded').output)
-        preds = decoding_model.predict_generator(test_sequence)
+        preds = decoding_model.predict(test_sequence)
 
         trues = np.argmax(y, -1)
         pred_strings = [''.join(self.data.mapping.get(label, '') for label in pred).strip(' |_') for pred in preds]
@@ -73,23 +74,28 @@ class LineModelCtc(Model):
         return mean_accuracy
     
     def predict_on_image(self, image: np.ndarray) -> Tuple[str, float]:
+        tf.keras.backend.set_learning_phase(0)
         softmax_output_fn = K.function(
-            [self.network.get_layer('image').input, K.learning_phase()]
+            [self.network.get_layer('image').input],
             [self.network.get_layer('softmax_output').output]
         )
         if image.dtype == np.uint8:
             image = (image / 255).astype(np.float32)
         
         input_image = np.expand_dims(image, 0)
-        softmax_output = softmax_output_fn([input_image, 0])[0]
+        softmax_output = softmax_output_fn([input_image])[0]
+        tf.keras.backend.set_learning_phase(0)
+        #softmax_output = self.network.get_layer('softmax_output').output(image[np.newaxis])
 
         input_length = np.array([softmax_output.shape[1]])
-        decoded, log_prob = K.ctc_decoded(softmax_output, input_length, greedy=True)
+        decoded, log_prob = tf.nn.ctc_decode(softmax_output, input_length, greedy=True)
 
-        pred_raw = K.eval(decoded[0])[0]
+        #pred_raw = K.eval(decoded[0])[0]
+        pred_raw = decoded[0].numpy()[0]
         pred = ''.join(self.data.mapping[label] for label in pred_raw).strip()
 
-        neg_sum_logit = K.eval(log_prob)[0][0]
+        #neg_sum_logit = K.eval(log_prob)[0][0]
+        neg_sum_logit = log_prob.numpy()[0][0]
         conf = np.exp(-neg_sum_logit)
 
         return pred, conf
@@ -113,8 +119,8 @@ def format_batch_ctc(batch_x, batch_y):
     batch_inputs = {
         'image' : batch_x,
         'y_true' : y_true,
-        'input_length' : np.ones((batch_size, 1)),
-        'label_length' : np.array(label_lengths)
+        'input_length' : tf.np.ones((batch_size, 1)),
+        'label_length' : tf.np.convert_to_tensor(label_lengths)
     }
     batch_outputs = {
         'ctc_loss': np.zeros(batch_size),

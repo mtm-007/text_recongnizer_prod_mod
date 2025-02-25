@@ -14,7 +14,7 @@ class LinePredictor:
         self.model = LineModelCtc(dataset_cls=dataset_cls)
         self.model.load_weights()
     
-    def predict(self, image_or_file: Union[np.ndarray, str]) -> Tuple[str, float]:
+    def predict(self, image_or_filename: Union[np.ndarray, str]) -> Tuple[str, float]:
         """Predict on a single image."""
         if isinstance(image_or_filename, str):
             image = util.read_image(image_or_filename, grayscale=True)
