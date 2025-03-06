@@ -177,3 +177,5 @@ cython_debug/
 #Large size dataset - can be extracted with the script, no need in github
 
 data/
+# experiment tracking files of wandb, should be kept on local machine
+text_recognizer/wandb/
