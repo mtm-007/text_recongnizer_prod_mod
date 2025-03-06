@@ -40,10 +40,9 @@ class LineModelCtc(Model):
     def metrics(self):
         """We could probably pass in a custom character accuracy metric for 'ctc_decoded' output here."""
         return None
-    
+
     def evaluate(self, x, y, batch_size: int=16, verbose: bool=True)->float:
         test_sequence = DatasetSequence(x, y, batch_size, format_fn=self.batch_format_fn)
-
         decoding_model = KerasModel(inputs= self.network.input, outputs= self.network.get_layer('ctc_decoded').output)
         preds = decoding_model.predict(test_sequence)
 
@@ -52,7 +51,7 @@ class LineModelCtc(Model):
         true_strings = [''.join(self.data.mapping.get(label, '') for label in true).strip(' |_') for true in trues]
 
         char_accuracies = [
-            1 - editdistance.eval(true_string, pred_string) / len(true_string)
+            1 - editdistance.eval(true_string, pred_string) / max(1,len(true_string))
             for pred_string, true_string in zip(pred_strings, true_strings)
         ]
         if verbose:
@@ -72,23 +71,29 @@ class LineModelCtc(Model):
                 print(f'Pred: {pred_strings[ind]}')
         mean_accuracy = np.mean(char_accuracies)
         return mean_accuracy
-    
+
     def predict_on_image(self, image: np.ndarray) -> Tuple[str, float]:
-        tf.keras.backend.set_learning_phase(0)
+        """Run Inference on a single image."""
+
         softmax_output_fn = K.function(
-            [self.network.get_layer('image').input],
+            [self.network.input, K.learning_phase()],
             [self.network.get_layer('softmax_output').output]
         )
         if image.dtype == np.uint8:
             image = (image / 255).astype(np.float32)
-        
+
         input_image = np.expand_dims(image, 0)
-        softmax_output = softmax_output_fn([input_image])[0]
-        tf.keras.backend.set_learning_phase(0)
+        softmax_output = softmax_output_fn([input_image, 0])[0]
+        # softmax_output_fn = tf.keras.Model(
+        #     inputs = self.network.input,
+        #     outputs = self.network.get_layer('softmax_output').output
+        # )
+        #softmax_output = softmax_output_fn.predict(input_image)
+
         #softmax_output = self.network.get_layer('softmax_output').output(image[np.newaxis])
 
         input_length = np.array([softmax_output.shape[1]])
-        decoded, log_prob = tf.nn.ctc_decode(softmax_output, input_length, greedy=True)
+        decoded, log_prob = K.ctc_decode(softmax_output, input_length, greedy=True)
 
         #pred_raw = K.eval(decoded[0])[0]
         pred_raw = decoded[0].numpy()[0]
@@ -99,7 +104,7 @@ class LineModelCtc(Model):
         conf = np.exp(-neg_sum_logit)
 
         return pred, conf
-    
+
 
 def format_batch_ctc(batch_x, batch_y):
     """
@@ -119,14 +124,11 @@ def format_batch_ctc(batch_x, batch_y):
     batch_inputs = {
         'image' : batch_x,
         'y_true' : y_true,
-        'input_length' : tf.np.ones((batch_size, 1)),
-        'label_length' : tf.np.convert_to_tensor(label_lengths)
+        'input_length' : np.ones((batch_size, 1)),
+        'label_length' : np.array(label_lengths,)
     }
     batch_outputs = {
         'ctc_loss': np.zeros(batch_size),
         'ctc_decoded': y_true
     }
     return batch_inputs, batch_outputs
-        
-        
-    

@@ -3,7 +3,7 @@ from pathlib import Path
 import argparse
 import os
 
-from text_recognizer import util 
+from text_recognizer import util
 
 
 class Dataset:
@@ -11,13 +11,13 @@ class Dataset:
     @classmethod
     def data_dirname(cls):
         return Path(__file__).parents[2].resolve() / 'data'
-    
+
     def load_or_generate_data(self):
         pass
 
 def _download_raw_dataset(metadata):
     if os.path.exists(metadata['filename']):
-        return 
+        return
     print('Downloading raw dataset...')
     util.download_url(metadata['url'], metadata['filename'])
     print('Computing SHA-256...')

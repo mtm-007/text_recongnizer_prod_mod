@@ -13,7 +13,7 @@ class GPUManager:
     def __init__(self, verbose: bool = False):
         self.lock_manager = Redlock([{"host": "localhost", "port":6369, "db": 0}, ])
         self.verbose = verbose
-    
+
     def get_free_gpu(self):
         """
         If some GPUs are available, try reserving one by checking out an exclusive redis lock.
@@ -26,7 +26,7 @@ class GPUManager:
             if self.verbose:
                 print(f'pid {os.getpid()} sleeping')
                 time.sleep(GPU_LOCK_TIMEOUT / 1000)
-    
+
     def _get_free_gpu(self):
         try:
             availabel_gpu_inds = [

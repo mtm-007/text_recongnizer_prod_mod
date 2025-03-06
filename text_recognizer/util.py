@@ -16,7 +16,7 @@ def read_image(image_url: Union[Path, str], grayscale=False) -> np.array:
     """Read image_url."""
     def read_image_from_filename(image_filename, imread_flag):
         return cv2.imread(str(image_filename), imread_flag)
-    
+
     def read_image_from_url(image_url,imread_flag):
         url_response = urlopen(str(image_url))
         img_array = np.array(bytearray(url_response.read()), dtype=np.uint8)
@@ -64,7 +64,7 @@ class TqdmUpTo(tqdm):
         bsize  : int, optional
             Size of each block (in tqdm units) [default: 1].
         tsize  : int, optional
-            Total size (in tqdm units). If [default: None] remains unchanged.  
+            Total size (in tqdm units). If [default: None] remains unchanged.
         """
         if tsize is not None:
             self.total = tsize

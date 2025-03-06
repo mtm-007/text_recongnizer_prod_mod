@@ -19,7 +19,7 @@ class CharacterPredictor:
         else:
             image = image_or_file
         return self.model.predict_on_image(image)
-    
+
     def evaluate(self, dataset):
         """Evaluate on dataset."""
         return self.model.evaluate(dataset.x_test, dataset.y_test)

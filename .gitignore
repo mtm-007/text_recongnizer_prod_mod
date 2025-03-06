@@ -172,3 +172,8 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+
+#Large size dataset - can be extracted with the script, no need in github
+
+data/

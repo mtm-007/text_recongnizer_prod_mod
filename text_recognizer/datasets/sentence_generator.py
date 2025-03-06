@@ -28,7 +28,7 @@ class SentenceGenerator:
             max_length = self.max_length
         if max_length is None:
             raise ValueError(f'Must provide max_length to this method or when making this objects')
-        
+
         ind = np.random.randint(0, len(self.word_start_inds) - 1)
         start_ind = self.word_start_inds[ind]
         end_ind_candidates = []
@@ -40,13 +40,13 @@ class SentenceGenerator:
         sampled_text = self.text[start_ind:end_ind].strip()
         padding = '_' * (max_length - len(sampled_text))
         return sampled_text + padding
-    
+
 
 def brown_text():
   """Return a single string with the Brown corps with all the punctuation stripped."""
   sents = load_nltk_brown_corps()
   text = ' '.join(itertools.chain.from_iterable(sents))
-  text = text.translate({ord(c):None for c in string.punctuation}) 
+  text = text.translate({ord(c):None for c in string.punctuation})
   text = re.sub('  +', ' ', text)
   return text
 

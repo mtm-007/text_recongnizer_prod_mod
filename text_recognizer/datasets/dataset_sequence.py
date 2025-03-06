@@ -19,17 +19,17 @@ class DatasetSequence(Sequence):
         self.y = y
         self.batch_size = batch_size
         self.augment_fn = augment_fn
-        self.format_fn = format_fn 
+        self.format_fn = format_fn
 
     def __len__(self):
         """Return length of the dataset."""
         return int(np.ceil(len(self.x)/ float(self.batch_size)))
-    
+
     def __getitem__(self, idx):
         """Return a single batch."""
         #idx = 0 #if you want to intentionally ovefit to just one batch
         begin = idx * self.batch_size
-        end = (idx + 1) * self.batch_size 
+        end = (idx + 1) * self.batch_size
 
         batch_x = self.x[begin:end]
         batch_y = self.y[begin:end]
@@ -44,7 +44,7 @@ class DatasetSequence(Sequence):
             batch_x, batch_y = self.format_fn(batch_x, batch_y)
 
         return batch_x, batch_y
-    
+
     def on_epoch_end(self)-> None:
         """"shuffle data."""
         self.x, self.y = _shuffle(self.x, self.y)

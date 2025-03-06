@@ -42,4 +42,4 @@ def train_model(
         gpu_utilization = gpu_utilization.samples
         print(f'GPU utilizatioin: {round(np.mean(gpu_utilization), 2)} +-{round(np.std(gpu_utilization), 2)}')
 
-    return model 
+    return model

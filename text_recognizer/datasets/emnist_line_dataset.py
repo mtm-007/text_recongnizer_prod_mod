@@ -49,8 +49,8 @@ class EmnistLinesDataset(Dataset):
             f'Input shape: {self.input_shape}\n'
             f'Train: {self.x_train.shape} {self.y_train.shape}\n'
             f'Test: {self.x_test.shape} {self.y_test.shape}\n'
-        ) 
-    
+        )
+
     def _load_data(self):
         print('EmnistLinesDataset loading data from HDF5...')
         with h5py.File(self.data_filename, 'r') as f:
@@ -58,10 +58,10 @@ class EmnistLinesDataset(Dataset):
             self.y_train = f['y_train'][:]
             self.x_test = f['x_test'][:]
             self.y_test = f['y_test'][:]
-    
+
     def _generate_data(self, split):
         print(f'EMNISTLinesDataset generating data...')
-        
+
         from text_recognizer.datasets.sentence_generator import SentenceGenerator
         sentence_generator = SentenceGenerator(self.max_length)
 
@@ -80,7 +80,7 @@ class EmnistLinesDataset(Dataset):
             y =convert_strings_to_categorical_labels(y, emnist.inverse_mapping)
             f.create_dataset(f'x_{split}', data=x, dtype='u1', compression= 'lzf')
             f.create_dataset(f'y_{split}', data=y, dtype='u1', compression = 'lzf')
-        
+
 
 
 def get_samples_by_char(samples, labels, mapping):
@@ -93,7 +93,7 @@ def get_samples_by_char(samples, labels, mapping):
 def select_letter_samples_for_string(string, samples_by_char):
     zero_image = np.zeros((28, 28),  np.uint8)
     sample_image_by_char = {}
-    for char in string: 
+    for char in string:
         if char in sample_image_by_char:
             continue
         samples = samples_by_char[char]

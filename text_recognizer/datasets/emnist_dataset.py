@@ -40,8 +40,8 @@ class EmnistDataset(Dataset):
             _download_and_process_emnist()
         with open(ESSENTIALS_FILENAME) as f:
             essentials = json.load(f)
-        
-        
+
+
         self.mapping = _augment_emnist_mapping(dict(essentials['mapping']))
         self.inverse_mapping = {v: k for k, v in self.mapping.items()}
         self.num_classes = len(self.mapping)
@@ -95,28 +95,28 @@ def verify_and_update_metadata():
     import hashlib
     import requests
     import toml
-    
+
     url = 'https://biometrics.nist.gov/cs_links/EMNIST/matlab.zip'
-    
+
     # Download the file and calculate its hash
     print("Downloading file to calculate new hash...")
     response = requests.get(url)
-    
+
     # Calculate hash of downloaded content
     sha256_hash = hashlib.sha256(response.content).hexdigest()
     print(f"New file hash: {sha256_hash}")
-    
+
     # Update metadata
     metadata = {
         'filename': 'emnist.zip',
         'url': url,
         'sha256': sha256_hash
     }
-    
+
     # Write updated metadata
     with open(METADATA_FILENAME, 'w') as f:
         toml.dump(metadata, f)
-    
+
     print("Updated metadata.toml with new hash")
     return metadata
 
@@ -124,7 +124,7 @@ def verify_and_update_metadata():
 def _download_and_process_emnist():
     # Create RAW_DATA_DIRNAME if it doesn't exist
     RAW_DATA_DIRNAME.mkdir(parents=True, exist_ok=True)
-    
+
     # Either load existing metadata or create new
     if os.path.exists(METADATA_FILENAME):
         try:
@@ -133,7 +133,7 @@ def _download_and_process_emnist():
             metadata = verify_and_update_metadata()
     else:
         metadata = verify_and_update_metadata()
-    
+
     curdir = os.getcwd()
     try:
         os.chdir(RAW_DATA_DIRNAME)

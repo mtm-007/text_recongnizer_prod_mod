@@ -28,7 +28,7 @@ def ctc_decode(y_pred, input_length, max_output_length):
     sparse = decoded[0]
     decoded_dense = tf.sparse.to_dense(tf.SparseTensor(indices=sparse.indices, dense_shape=sparse.dense_shape, values=sparse.values),
                                         default_value=-1)
-    
+
     # Unfortunately, decoded_dense will be of different number of columns, depending on the decodings.
     # We need to get it all in one standard shape, so let's pad if necessary.
     max_length = max_output_length + 2
@@ -36,9 +36,8 @@ def ctc_decode(y_pred, input_length, max_output_length):
 
     def pad():
         return tf.pad(decoded_dense, [[0,0],[0, max_length - cols]], constant_values= -1)
-    
+
     def noop():
         return decoded_dense
-    
-    return tf.cond(tf.less(cols, max_length), pad, noop)
 
+    return tf.cond(tf.less(cols, max_length), pad, noop)

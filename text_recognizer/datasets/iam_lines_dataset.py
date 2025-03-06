@@ -29,7 +29,7 @@ class IAMLinesDataset(Dataset):
         self.x_test = None
         self.y_train_int = None
         self.y_test_int = None
-    
+
     def load_or_generate_data(self):
         """Load or generate dataset data."""
         if not PROCESSED_DATA_FILENAME.exists():
@@ -53,17 +53,17 @@ class IAMLinesDataset(Dataset):
         self.x_train_int = self.y_train_int[:num_train]
         self.x_test = self.x_test[:num_test]
         self.y_test_int = self.y_test_int[:num_test]
-    
+
     @cachedproperty
     def y_train(self):
         """Return y_train."""
         return to_categorical(self.y_train_int, self.num_classes)
-    
+
     @cachedproperty
     def y_test(self):
         """Return y_test."""
         return to_categorical(self.y_test_int, self.num_classes)
-    
+
     def __repr__(self):
         """Print info about dataset."""
         return (
@@ -73,7 +73,7 @@ class IAMLinesDataset(Dataset):
             f'Train: {self.x_train.shape} {self.y_train.shape}\n'
             f'Test: {self.x_test.shape} {self.y_test.shape}\n'
         )
-    
+
 
 def main():
     """Load dataset and print info."""

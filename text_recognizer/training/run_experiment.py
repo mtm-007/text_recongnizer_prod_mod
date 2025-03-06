@@ -96,7 +96,7 @@ def run_experiment(experiment_config: Dict, save_weights: bool, gpu_ind: int, us
 
     if save_weights:
         model.save_weights()
-    
+
 def _parse_args():
     """Parse command-line arguments."""
     parser = argparse.ArgumentParser()
@@ -142,4 +142,3 @@ def main():
 
 if __name__=="__main__":
     main()
-

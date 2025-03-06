@@ -13,14 +13,14 @@ class LinePredictor:
     def __init__(self, dataset_cls=EmnistLinesDataset):
         self.model = LineModelCtc(dataset_cls=dataset_cls)
         self.model.load_weights()
-    
+
     def predict(self, image_or_filename: Union[np.ndarray, str]) -> Tuple[str, float]:
         """Predict on a single image."""
         if isinstance(image_or_filename, str):
             image = util.read_image(image_or_filename, grayscale=True)
         else:
             image = image_or_filename
-    
+
         return self.model.predict_on_image(image)
 
     def evaluate(self, dataset):

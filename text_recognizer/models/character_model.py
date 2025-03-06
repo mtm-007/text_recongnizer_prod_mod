@@ -16,11 +16,11 @@ class CharacterModel(Model):
                  network_args: Dict = None):
         """Define the default dataset and network values of this model."""
         super().__init__(dataset_cls, network_fn, dataset_args, network_args)
-    
+
     def predict_on_image(self, image: np.ndarray )-> Tuple[str, float]:
         if image.dtype == np.uint8:
             image = (image / 255).astype(np.float32)
-        
+
         pred_raw = self.network.predict(np.expand_dims(image, 0), batch_size=1).flatten()
         ind = np.argmax(pred_raw)
         confidence_of_prediction = pred_raw[ind]

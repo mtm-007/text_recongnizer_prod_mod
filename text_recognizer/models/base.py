@@ -30,12 +30,12 @@ class Model:
     @property
     def image_shape(self):
         return self.data.input_shape
-    
+
     @property
     def weights_filename(self) -> str:
         DIRNAME.mkdir(parents=True, exist_ok=True)
         return str(DIRNAME / f'{self.name}_weights.h5')
-    
+
     def fit(self, dataset, batch_size:int = 32, epochs:int = 10, augment_val:bool = True, callbacks:list = None):
         if callbacks is None:
             callbacks = []
@@ -66,23 +66,23 @@ class Model:
             validation_data = test_sequence,
             use_multiprocessing = True,
             workers = 2,
-            shuffle = True 
+            shuffle = True
         )
-    
+
     def evaluate(self, x, y, batch_size = 16, verbose= False): #pylint: disable= no-self-use
         sequence = DatasetSequence(x, y, batch_size=batch_size)
         preds = self.network.predict(sequence)
         return np.mean(np.argmax(preds, -1) == np.argmax(y, -1))
-    
+
     def loss(self): #pylint: disable= no-self-use
         return 'categorical_crossentropy'
-    
+
     def optimizer(self): #pylint: disable= no-self-use
         return RMSprop()
-    
+
     def metrics(self): #pylint: disable= no-self-use
         return ['accuracy']
-    
+
     def load_weights(self):
         self.network.load_weights(self.weights_filename)
 
