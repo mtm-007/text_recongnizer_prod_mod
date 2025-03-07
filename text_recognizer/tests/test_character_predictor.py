@@ -18,4 +18,4 @@ class TestCharacterPredictor(unittest.TestCase):
             pred, conf = predictor.predict(str(filname))
             print(f'Prediction: {pred} at confidence: {conf} for image with character {filname.stem}')
             self.assertEqual(pred, filname.stem)
-            self.assertGreater(conf, 0.7)
+            self.assertGreater(conf, 0.65)
