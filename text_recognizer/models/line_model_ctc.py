@@ -76,7 +76,8 @@ class LineModelCtc(Model):
         """Run Inference on a single image."""
 
         softmax_output_fn = K.function(
-            [self.network.input, K.learning_phase()],
+            #[self.network.input, K.learning_phase()],
+            [self.network.input], # tensorflow 2.X handles learning_phase automatically
             [self.network.get_layer('softmax_output').output]
         )
         if image.dtype == np.uint8:
@@ -84,20 +85,14 @@ class LineModelCtc(Model):
 
         input_image = np.expand_dims(image, 0)
         softmax_output = softmax_output_fn([input_image, 0])[0]
-        # softmax_output_fn = tf.keras.Model(
-        #     inputs = self.network.input,
-        #     outputs = self.network.get_layer('softmax_output').output
-        # )
-        #softmax_output = softmax_output_fn.predict(input_image)
-
-        #softmax_output = self.network.get_layer('softmax_output').output(image[np.newaxis])
 
         input_length = np.array([softmax_output.shape[1]])
         decoded, log_prob = K.ctc_decode(softmax_output, input_length, greedy=True)
 
         #pred_raw = K.eval(decoded[0])[0]
         pred_raw = decoded[0].numpy()[0]
-        pred = ''.join(self.data.mapping[label] for label in pred_raw).strip()
+        #pred = ''.join(self.data.mapping[label] for label in pred_raw).strip()
+        pred = ''.join(self.data.mapping[label] for label in pred_raw if label != -1).strip() #ctc decoding included -1 as a placeholder
 
         #neg_sum_logit = K.eval(log_prob)[0][0]
         neg_sum_logit = log_prob.numpy()[0][0]
