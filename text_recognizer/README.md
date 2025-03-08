@@ -52,4 +52,7 @@ python training/run_experiment.py --save '{"dataset": "EmnistDataset", "model": 
 python training/run_experiment.py --save '{"dataset": "EmnistDataset", "model": "CharacterModel", "network": "lenet", "train_args": {"batch_size": 256}, "experiment_group": "Sample Experiments 2"}'
 
 python training/run_experiment.py --save '{"dataset": "IAMLinesDataset", "model": "LineModelCtc", "network": "line_lstm_ctc"}'
+
+### line predector on iam dataset
+python training/run_experiment.py --save '{"dataset": "IAMLinesDataset", "model": "LineModelCtc", "network": "line_lstm_ctc"}'
 `

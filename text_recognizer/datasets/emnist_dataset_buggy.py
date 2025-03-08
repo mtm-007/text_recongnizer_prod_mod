@@ -12,12 +12,12 @@ from tensorflow.keras.utils import to_categorical
 import h5py
 import numpy as np
 from scipy.io import loadmat
-import toml 
+import toml
 
 import sys
 
 
-from text_recognizer.datasets.dataset import _download_raw_dataset, Dataset, _parse_args 
+from text_recognizer.datasets.dataset import _download_raw_dataset, Dataset, _parse_args
 
 
 SAMPLE_TO_BALANCE = True
@@ -35,7 +35,7 @@ class EmnistDataset(Dataset):
     """
     "The Emnist dataset is a set of handwritten character digits derived from NIST Special Database 19
     and converted to a 28x28 pixcel image format and dataset structure that directly matches the mnist dataset."
-    From https://www.nist.gov/itl/iad/image-group/emnist-dataset 
+    From https://www.nist.gov/itl/iad/image-group/emnist-dataset
 
     The data split will use is
     EMNIST Byclass:814,255 characters, 62 unbalanced classes.
@@ -83,7 +83,7 @@ class EmnistDataset(Dataset):
     @cachedproperty
     def y_train(self):
         return to_categorical(self.y_train_int, self.num_classes)
-    
+
     @cachedproperty
     def y_test(self):
         return to_categorical(self.y_test_int, self.num_classes)
@@ -95,8 +95,8 @@ class EmnistDataset(Dataset):
             f'Mapping: {self.mapping}\n'
             f'Input shape: {self.input_shape}\n'
         )
-    
-    
+
+
 def _download_and_process_emnist():
     # metadata = toml.load(METADATA_FILENAME)
     # curdir = os.getcwd()
@@ -136,13 +136,13 @@ def _process_raw_dataset(filename:str):
         f.create_dataset('y_train', data=y_train, dtype='u1', compression='lzf')
         f.create_dataset('x_test', data=x_test, dtype='u1', compression='lzf')
         f.create_dataset('y_test', data=y_test, dtype='u1', compression='lzf')
-    
+
     print('Saving essential dataset parameters to text_recongnizer/datasets...')
     mapping = {int(k): chr(v) for k, v in data['dataset']['mapping'][0, 0]}
     essentials = {'mapping': list(mapping.items()), 'input_shape':list(x_train.shape[1:])}
     with open(ESSENTIALS_FILENAME, 'w') as f:
         json.dump(essentials, f)
-    
+
     print('cleaning up...')
     shutil.rmtree('matlab')
 
@@ -189,4 +189,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

@@ -36,7 +36,7 @@ class IAMParagraphsDataset(Dataset):
         self.x = None
         self.y = None
         self.ids = None
-    
+
     def load_or_generate_data(self):
         """Load or generate Dataset data"""
         num_actual = len(list(CROPS_DIRNAME.glob('*.jpg')))
@@ -47,7 +47,7 @@ class IAMParagraphsDataset(Dataset):
         self.x, self.y, self.ids = _load_iam_paragraphs()
         self.train_ind, self.test_ind = _get_random_split(self.x.shape[0])
         self._subsample()
-    
+
     @cachedproperty
     def x_train(self):
         return self.x[self.train_ind]
@@ -59,15 +59,15 @@ class IAMParagraphsDataset(Dataset):
     @cachedproperty
     def x_test(self):
         return self.x[self.test_ind]
-    
+
     @cachedproperty
     def y_test(self):
         return self.y[self.test_ind]
-    
+
     @cachedproperty
     def ids_train(self):
         return self.ids[self.train_ind]
-    
+
     @cachedproperty
     def ids_train(self):
         return self.ids[self.train_ind]
@@ -75,7 +75,7 @@ class IAMParagraphsDataset(Dataset):
     def get_x_and_y_from_id(self, id_):
         ind =  self.ids.index(id_)
         return self.x[ind], self.y[ind]
-    
+
     def _process_iam_paragraphs(self):
         """
         For each page, crop out the part of it that correspond to the paragraph of text, and make sure all crops are
@@ -91,7 +91,7 @@ class IAMParagraphsDataset(Dataset):
             id_ = filename.stem
             line_region =  self.iam_dataset.line_regions_by_id[id_]
             _crop_paragraph_image(filename, line_region, crops_dims, self.input_shape)
-    
+
     def _decide_on_crop_dims(self):
         """
         Decide on the dimensions to crop out of the form image.
@@ -103,7 +103,7 @@ class IAMParagraphsDataset(Dataset):
         do all kinds of power-of-2 pooling and upsampling should we choose to.
         """
         sample_from_filename= self.iam_dataset.from_filenames[0]
-        sample_image = util.read_image(sample_from_filename, grayscale=True)  
+        sample_image = util.read_image(sample_from_filename, grayscale=True)
         max_crop_width = sample_image.shape[1]
         max_crop_height =  _get_max_paragraphs_crop_height(self.iam_dataset.line_regions_by_id)
         assert max_crop_height <= max_crop_width
@@ -111,7 +111,7 @@ class IAMParagraphsDataset(Dataset):
         print(f'Max crop width and height are found to be {max_crop_width}x{max_crop_height}.')
         print(f'Setting them to {max_crop_width}x{max_crop_width}')
         return crop_dims
-    
+
     def _subsample(self):
         """Only this fraction of data will be loaded."""
         if self.subsample_fraction is None:
@@ -120,7 +120,7 @@ class IAMParagraphsDataset(Dataset):
         self.x = self.x[:num_subsample]
         self.y = self.y[:num_subsample]
         self.ids = self.ids[:num_subsample]
-    
+
     def __repr__(self):
         """Print info about the dataset."""
         return (
@@ -129,7 +129,7 @@ class IAMParagraphsDataset(Dataset):
             f'Train: {self.x_train.shape} {self.y_train.shape}\n'
             f'Test: {self.x_test.shape} {self.y_test.shape}\n'
         )
-    
+
 def _get_max_paragraphs_crop_height(line_regions_by_id):
     heights = []
     for regions in line_regions_by_id.values():
@@ -157,7 +157,7 @@ def _crop_paragraph_image(filename, line_regions, crop_dims, final_dims):
     except Exception as e:
         print(f'Rescued {filename}: {e}')
         return
-    
+
     #generate ground truth
     gt_image= np.zeros_like(image_crop, dtype=np.uint8)
     for ind, region in enumerate(line_regions):

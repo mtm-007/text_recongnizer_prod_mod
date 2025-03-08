@@ -18,7 +18,7 @@ DOWNSAMPLE_FACTOR = 2
 LINE_REGION_PADDING = 0
 
 """
-manually add data/raw/iam/metadata.toml 
+manually add data/raw/iam/metadata.toml
 
 url = 'https://s3-us-west-2.amazonaws.com/fsdl-public-assets/iam/iamdb.zip'
 filename = 'iamdb.zip'
@@ -42,19 +42,19 @@ class IamDataset(Dataset):
     """
     def __init__(self):
         self.metadata =  toml.load(METADATA_FILENAME)
-    
+
     def load_or_generate_data(self):
         if not self.xml_filenames:
             self._download_iam()
-    
+
     @property
     def xml_filenames(self):
         return list((EXTRACTED_DATASET_DIRNAME / 'xml').glob('*.xml'))
-    
+
     @property
     def from_filenames(self):
         return list((EXTRACTED_DATASET_DIRNAME / 'forms').glob('*.jpg'))
-    
+
     def _download_iam(self):
         os.makedirs(RAW_DATA_DIRNAME, exist_ok=True)
         curdir = os.getcwd()
@@ -66,7 +66,7 @@ class IamDataset(Dataset):
     @property
     def from_filenames_by_id(self):
         return {filename.stem: filename for filename in self.from_filenames}
-    
+
     @cachedproperty
     def line_regions_by_id(self):
         """Return a dict from name of IAM form to a list of line texts in it."""
@@ -74,14 +74,14 @@ class IamDataset(Dataset):
             filename.stem: _get_line_regions_from_xml_file(filename)
             for filename in self.xml_filenames
         }
-    
+
     def __repr__(self):
         """Print info about the dataset."""
         return (
             'IAM Dataset \n'
             f'Num forms: {len(self.xml_filenames)}\n'
         )
-    
+
 
 def _extract_raw_dataset(metadata):
     print('Extracting IAM data')
