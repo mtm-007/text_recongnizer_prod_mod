@@ -53,6 +53,6 @@ python training/run_experiment.py --save '{"dataset": "EmnistDataset", "model": 
 
 python training/run_experiment.py --save '{"dataset": "IAMLinesDataset", "model": "LineModelCtc", "network": "line_lstm_ctc"}'
 
-### line predector on iam dataset
+### line predector on iam dataset, run iam_dataset to get the iam dataset
 python training/run_experiment.py --save '{"dataset": "IAMLinesDataset", "model": "LineModelCtc", "network": "line_lstm_ctc"}'
 `
