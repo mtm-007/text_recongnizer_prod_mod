@@ -35,7 +35,7 @@ class LineDetectorModel(Model):
         self.batch_augment_fn = self.augment_batch
 
     def loss(self):
-        return 'categorical_cross_entropy'
+        return 'categorical_crossentropy'
 
     def optimizer(self):
         return Adam(0.001/2)
@@ -45,7 +45,7 @@ class LineDetectorModel(Model):
 
     def augment_batch(self, x_batch: np.ndarray, y_batch: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         """Performs different random transformations on the whole batch of x, y samples."""
-        x_augment, y_augment = zip(*[self._augment_sample(x,y) for x,y in zip(x_batch, y_batch)])
+        x_augment, y_augment = zip(*[self._agument_sample(x,y) for x,y in zip(x_batch, y_batch)])
         return np.stack(x_augment, axis=0), np.stack(y_augment, axis=0)
 
     def _agument_sample(self, x: np.ndarray, y: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:

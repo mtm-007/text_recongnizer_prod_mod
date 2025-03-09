@@ -55,4 +55,7 @@ python training/run_experiment.py --save '{"dataset": "IAMLinesDataset", "model"
 
 ### line predector on iam dataset, run iam_dataset to get the iam dataset
 python training/run_experiment.py --save '{"dataset": "IAMLinesDataset", "model": "LineModelCtc", "network": "line_lstm_ctc"}'
+#### for iam paragraphs dataset
+python training/run_experiment.py --save '{"dataset": "IAMParagraphsDataset", "model": "LineDetectorModel", "network": "fcn"}'
+
 `
