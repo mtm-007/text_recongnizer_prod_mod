@@ -20,4 +20,4 @@ class TestParagraphTextRecognizer(unittest.TestCase):
             full_image = util.read_image(str(filename), grayscale=True)
             predicted_text, line_region_crops = predictor.predict(full_image)
             print(predicted_text)
-            assert len(line_region_crops) == num_text_lines_by_name[filename.stem]
+            assert len(line_region_crops) ==  num_text_lines_by_name[filename.stem]
