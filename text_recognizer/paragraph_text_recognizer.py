@@ -5,7 +5,7 @@ of the image corresponding to the line regions, and running each line region cro
 from typing import List, Tuple, Union
 import cv2
 import numpy as np
-from text_recognizer.datasets import IamDataset
+from text_recognizer.datasets import IAMLinesDataset
 from text_recognizer.models.line_detector_model import LineDetectorModel
 from text_recognizer.models.line_model_ctc import LineModelCtc
 import text_recognizer.util as util
@@ -16,10 +16,10 @@ class ParagraphTextRecognizer:
     def __init__(self):
         self.line_detector_model = LineDetectorModel()
         self.line_detector_model.load_weights()
-        self.line_predictor_model = LineModelCtc(dataset_cls=IamDataset)
+        self.line_predictor_model = LineModelCtc(dataset_cls=IAMLinesDataset)
         self.line_predictor_model.load_weights()
 
-    def predictor(self, image_or_filename: Union[np.ndarray, str]):
+    def predict(self, image_or_filename: Union[np.ndarray, str]):
         """
         Takes an image and returns all the text in it.
         """
