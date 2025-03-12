@@ -5,7 +5,7 @@ help:
 # Install exact Python and CUDA versions
 conda-update:
 	conda env update --prune -f environment.yml
-	echo "!!!RUN RIGHT NOW:\nconda activate fsdl-text-recognizer"
+	echo "!!!RUN RIGHT NOW:\nconda activate fsdl-ocr"
 
 # Compile and install exact pip packages
 pip-tools:

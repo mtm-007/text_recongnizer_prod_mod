@@ -10,10 +10,22 @@ nltk
 pycodestyle
 pydocstyle
 pylint
-pytest
 pyyaml
-tornado
 safety
 scipy
 pillow
+
+boltons
+ipywidgets
+pre-commit
+toml
+
+# versioned to give pip hints
+pytest==7.1.1
+# versioned to match Google Colab
+seaborn>=0.13,<0.14
+tornado>=6.3,<6.4
+# versioned to improve stability
+pytorch-lightning==1.6.3
+torchmetrics<0.8
 wandb

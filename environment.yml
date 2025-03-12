@@ -1,10 +1,10 @@
-name: fsdl-text-recognizer
+name: fsdl-ocr
 channels:
   - defaults
 dependencies:
-  - python
+  - python==3.9
   #- cudatoolkit=10.1
   #- cudnn=7.6
-  - pip
+  - pip ==24.0
   - pip:
     - pip-tools
