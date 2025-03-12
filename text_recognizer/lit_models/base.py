@@ -52,7 +52,7 @@ class BaseLitModel(pl.LightningModule):
         scheduler = torch.optim.lr_scheduler.OneCycleLR(
             optimizer=optimizer, max_lr=self.one_cycle_max_lr, total_steps=self.one_cycle_total_steps
         )
-        return {"optimzer": optimizer, "lr_scheduler": scheduler, "monitor": "val_loss"}
+        return {"optimizer": optimizer, "lr_scheduler": scheduler, "monitor": "val_loss"}
     
     def forward(self, x):
         return self.model(x)
@@ -61,20 +61,23 @@ class BaseLitModel(pl.LightningModule):
        x, y = batch
        logits = self(x)
        loss = self.loss_fn(logits, y)
+       self.log("train_loss", loss)
+       self.train_acc(logits, y)
        self.log("train_acc", self.train_acc, on_step=False, on_epoch=True)
+       return loss
     
     def validation_step(self, batch, batch_idx):
         x, y = batch
         logits = self(x)
         loss = self.loss_fn(logits, y)
-        self.log("val_los", loss, prog_bar=True)
+        self.log("val_loss", loss, prog_bar=True)
         self.val_acc(logits, y)
         self.log("val_acc", self.val_acc, on_step=False, on_epoch=True, prog_bar=True)
     
     def test_step(self, batch, batch_idx):
         x, y = batch
         logits = self(x)
-        loss = self.test_acc(logits, y)
+        self.test_acc(logits, y)
         self.log("test_acc", self.test_acc, on_step=False, on_epoch=True)
     
     
