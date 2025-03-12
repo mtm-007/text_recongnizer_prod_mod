@@ -30,7 +30,7 @@ def read_image_pil_file(image_file: Union[Path, str], grayscale= False) -> Image
             image= image.convert(mode=image.mode)
         return Image
 
-@contextlib.contexmanager
+@contextlib.contextmanager
 def temporary_working_directory(working_dir: Union[str, Path]):
     """Temporarily switches to a directory, then returns to the original directory on exit."""
     curdir = os.getcwd()

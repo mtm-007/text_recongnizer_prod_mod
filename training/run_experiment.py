@@ -32,8 +32,8 @@ def _setup_parser():
     parser.add_argument("--load_checkpoint", type=str, default= None)
 
     temp_args, _ = parser.parse_known_args()
-    data_class = _import_class(f"text_recognizer.data{temp_args.data_class}") 
-    module_class = _import_class(f"text_recognizer.models{temp_args.model_class}") 
+    data_class = _import_class(f"text_recognizer.data.{temp_args.data_class}") 
+    module_class = _import_class(f"text_recognizer.models.{temp_args.model_class}") 
 
     data_group = parser.add_argument_group("Data Args")
     data_class.add_to_argparse(data_group)
@@ -44,7 +44,7 @@ def _setup_parser():
     lit_model_group = parser.add_argument_group("LiModel Args")
     lit_models.BaseLitModel.add_to_argparse(lit_model_group)
 
-    parser.add_argument("--help", "-h", action=help)
+    parser.add_argument("--help", "-h", action="help")
     return parser
 
 def main():
